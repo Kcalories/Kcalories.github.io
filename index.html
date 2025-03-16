@@ -1,0 +1,213 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Monitorea tu salud, controla tus calorías y peso. Registra tu progreso y obtén información útil para tu bienestar.">
+    <meta name="keywords" content="calorías, peso, salud, bienestar, dieta, seguimiento de peso, cálculo de calorías, fitness">
+    <meta name="author" content="Tu Nombre o Tu Marca">
+    <title>Seguimiento de Calorías y Peso</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Analytics (solo ejemplo para mejorar el SEO y tráfico) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXXX-X"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-XXXXXXX-X');
+    </script>
+
+    <!-- Google AdSense (ejemplo de colocación de anuncios) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+</head>
+<body class="bg-gradient-to-r from-blue-400 to-purple-500 min-h-screen flex flex-col items-center justify-center">
+    
+    <!-- Sección de Introducción -->
+    <div id="intro" class="text-center p-10 text-white">
+        <h1 class="text-5xl font-bold">Bienvenido a tu Seguimiento de Salud</h1>
+        <p class="mt-4 text-lg">Controla tu consumo calórico y evolución de peso de manera fácil.</p>
+        <button onclick="empezar()" class="mt-6 px-6 py-3 bg-white text-blue-600 font-bold rounded-lg shadow-lg hover:bg-gray-200">Comenzar</button>
+    </div>
+
+    <!-- Sección de Formulario -->
+    <div id="formulario" class="hidden max-w-xl w-full bg-white p-6 rounded-lg shadow-lg">
+        <h1 class="text-3xl font-bold text-center text-blue-600 mb-4">Seguimiento de Calorías y Peso</h1>
+
+        <!-- Anuncio al principio de la página -->
+        <div class="mb-6">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXX"
+                 data-ad-slot="XXXXXXX"
+                 data-ad-format="auto"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block font-semibold">Nombre:</label>
+            <input type="text" id="nombre" class="w-full p-2 border rounded" placeholder="Ej: Juan Pérez" required>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block font-semibold">Edad:</label>
+            <input type="number" id="edad" class="w-full p-2 border rounded" placeholder="Ej: 25" required>
+        </div>
+
+        <div class="mb-4">
+            <label class="block font-semibold">Género:</label>
+            <select id="genero" class="w-full p-2 border rounded">
+                <option value="masculino">Masculino</option>
+                <option value="femenino">Femenino</option>
+            </select>
+        </div>
+        
+        <div class="mb-4">
+            <label class="block font-semibold">Altura (cm):</label>
+            <input type="number" id="altura" class="w-full p-2 border rounded" placeholder="Ej: 175" required>
+        </div>
+
+        <div class="mb-4">
+            <label class="block font-semibold">Peso actual (kg):</label>
+            <input type="number" id="peso" class="w-full p-2 border rounded" placeholder="Ej: 70" required>
+        </div>
+
+        <button onclick="calcularCalorias()" class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600">Calcular Requerimiento</button>
+        
+        <h2 class="text-xl font-bold mt-6">Requerimiento Calórico Diario</h2>
+        <p id="caloriasDiarias" class="mt-2 text-lg text-gray-700 font-semibold"></p>
+        
+        <h2 class="text-xl font-bold mt-6">Opciones de Consumo</h2>
+        <table class="w-full mt-4 border-collapse border border-gray-400">
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="border border-gray-400 p-2">Objetivo</th>
+                    <th class="border border-gray-400 p-2">Calorías a consumir</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="border border-gray-400 p-2">Déficit calórico (-500 kcal)</td>
+                    <td class="border border-gray-400 p-2" id="deficit"></td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-400 p-2">Déficit moderado (-300 kcal)</td>
+                    <td class="border border-gray-400 p-2" id="deficitModerado"></td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-400 p-2">Déficit bajo (-100 kcal)</td>
+                    <td class="border border-gray-400 p-2" id="deficitBajo"></td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-400 p-2">Mantenimiento</td>
+                    <td class="border border-gray-400 p-2" id="mantenimiento"></td>
+                </tr>
+                <tr>
+                    <td class="border border-gray-400 p-2">Volumen (+500 kcal)</td>
+                    <td class="border border-gray-400 p-2" id="volumen"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Otro posible anuncio -->
+        <div class="mt-8">
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXX"
+                 data-ad-slot="XXXXXXX"
+                 data-ad-format="auto"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        
+        <h2 class="text-xl font-bold mt-6">Historial de Peso</h2>
+        <form id="formPeso" class="mt-4">
+            <label class="block font-semibold">Agregar Peso:</label>
+            <input type="number" id="nuevoPeso" class="w-full p-2 border rounded" placeholder="Ej: 72" required>
+            <button type="submit" class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 mt-2">Guardar Peso</button>
+        </form>
+        
+        <canvas id="pesoChart" class="mt-4"></canvas>
+    </div>
+
+    <script>
+        let historial = JSON.parse(localStorage.getItem("historial")) || [];
+
+        function empezar() {
+            document.getElementById("intro").classList.add("hidden");
+            document.getElementById("formulario").classList.remove("hidden");
+            actualizarGrafica();
+        }
+        
+        function calcularCalorias() {
+            let peso = parseFloat(document.getElementById("peso").value);
+            let altura = parseFloat(document.getElementById("altura").value);
+            let edad = parseInt(document.getElementById("edad").value);
+            let genero = document.getElementById("genero").value;
+            
+            if (!peso || !altura || !edad) return;
+            
+            let caloriasDiarias = (genero === "masculino") 
+                ? Math.round(88.36 + (13.4 * peso) + (4.8 * altura) - (5.7 * edad))
+                : Math.round(447.6 + (9.2 * peso) + (3.1 * altura) - (4.3 * edad));
+            
+            document.getElementById("caloriasDiarias").innerText = `Tu requerimiento calórico diario es de aproximadamente ${caloriasDiarias} kcal.`;
+            document.getElementById("deficit").innerText = caloriasDiarias - 500;
+            document.getElementById("deficitModerado").innerText = caloriasDiarias - 300;
+            document.getElementById("deficitBajo").innerText = caloriasDiarias - 100;
+            document.getElementById("mantenimiento").innerText = caloriasDiarias;
+            document.getElementById("volumen").innerText = caloriasDiarias + 500;
+        }
+        
+        function actualizarGrafica() {
+            let ctx = document.getElementById("pesoChart").getContext("2d");
+            let labels = historial.map(d => d.fecha);
+            let dataPesos = historial.map(d => d.peso);
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: "Peso (kg)",
+                        data: dataPesos,
+                        borderColor: "#3b82f6",
+                        backgroundColor: "rgba(59, 130, 246, 0.2)",
+                        fill: true,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false, // Quitamos la leyenda para que no aparezcan los cuadros que permiten ocultar las líneas
+                        }
+                    }
+                }
+            });
+        }
+
+        // Evento para agregar un nuevo peso y fecha
+        document.getElementById("formPeso").addEventListener("submit", function(event) {
+            event.preventDefault();
+            
+            let nuevoPeso = parseFloat(document.getElementById("nuevoPeso").value);
+            if (isNaN(nuevoPeso)) return;
+            
+            let fecha = new Date().toLocaleDateString();
+            historial.push({ peso: nuevoPeso, fecha: fecha });
+            
+            // Guardar el historial actualizado en localStorage
+            localStorage.setItem("historial", JSON.stringify(historial));
+            
+            // Limpiar el formulario y actualizar la gráfica
+            document.getElementById("nuevoPeso").value = "";
+            actualizarGrafica();
+        });
+    </script>
+</body>
+</html>
